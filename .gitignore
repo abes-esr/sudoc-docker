@@ -1,0 +1,4 @@
+.env
+volumes/convergence-db/pgdata/*
+volumes/convergence-db/dump/*
+.idea/
