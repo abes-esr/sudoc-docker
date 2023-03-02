@@ -66,7 +66,7 @@ services:
       WATCHTOWER_NOTIFICATIONS: "slack"
       WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${CONVERGENCE_WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL}
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: ${CONVERGENCE_WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER}
-      WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: "#notif-convergence"
+      WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: "#notif-convergence-watchtower"
       WATCHTOWER_SCOPE: "convergence-watchtower-scope"
     labels:
       - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
