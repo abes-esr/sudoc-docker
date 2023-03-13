@@ -14,9 +14,9 @@ services:
   # convergence-api
   # API de convergence
   # (écrite en java spring boot)
-  convergence-api:
-    image: abesesr/convergence:${CONVERGENCE_API_VERSION}
-    container_name: convergence-api
+  kbart-api:
+    image: abesesr/convergence:${CONVERGENCE_KBART_API_VERSION}
+    container_name: kbart-api
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     environment:
@@ -34,6 +34,31 @@ services:
       SPRING_DATASOURCE_BASEXML_PASSWORD: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
     ports:
       - ${CONVERGENCE_API_HTTP_PORT}:8082
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
+
+  ############################
+  # convergence-api
+  # API de convergence
+  # (écrite en java spring boot)
+  sudoc-api:
+    image: abesesr/convergence:${CONVERGENCE_SUDOC_API_VERSION}
+    container_name: sudoc-api
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    environment:
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # dans le code ici:
+      # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
+      SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
+    ports:
+      - ${CONVERGENCE_API_HTTP_PORT}:8083
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
