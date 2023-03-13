@@ -33,7 +33,7 @@ services:
       SPRING_DATASOURCE_BASEXML_USERNAME: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_USERNAME}
       SPRING_DATASOURCE_BASEXML_PASSWORD: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
     ports:
-      - ${CONVERGENCE_API_HTTP_PORT}:8082
+      - ${CONVERGENCE_KBART_API_HTTP_PORT}:8082
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -58,7 +58,7 @@ services:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
       SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
     ports:
-      - ${CONVERGENCE_API_HTTP_PORT}:8083
+      - ${CONVERGENCE_SUDOC_API_HTTP_PORT}:8083
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
