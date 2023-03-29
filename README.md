@@ -11,12 +11,14 @@ Les URLs correspondantes aux déploiements en local, dev, test et prod de item s
 - local :
     - http://127.0.0.1:11081/ : URL interne de ...
 - dev :
-    - http://diplotaxis2-dev.v212.abes.fr:11081/ : URL interne de ...
+    - http://diplotaxis2-dev.v212.abes.fr:15080/ : URL interne des webservices kbart : 
+    - http://diplotaxis2-dev.v212.abes.fr:15081/ : URL interne des webservices sudoc :
 - test :
-    - http://diplotaxis2-test.v202.abes.fr:11081/ : URL interne de ...
+    - http://diplotaxis2-test.v202.abes.fr:15080/ : URL interne des webservices kbart :
+    - http://diplotaxis2-test.v202.abes.fr:15081/ : URL interne des webservices sudoc :
 - prod
-    - http://diplotaxis2-prod.v102.abes.fr:11081/ : URL interne de ...
-
+    - http://diplotaxis2-prod.v102.abes.fr:15080/ : URL interne des webservices kbart :
+    - http://diplotaxis2-prod.v102.abes.fr:15081/ : URL interne des webservices sudoc :
 ## Prérequis
 Disposer de :
 - ``docker``
