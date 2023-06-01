@@ -2,23 +2,36 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/item.svg)](https://hub.docker.com/r/abesesr/convergence/)
 
-Ce dépôt contient la configuration docker 🐳 pour déployer l'application convergence (cf sources du [web service](https://github.com/abes-esr/convergence-webservices)) en local sur le poste d'un développeur, ou bien sur les serveurs de dev, test et prod.
+Ce dépôt contient la configuration docker 🐳 pour déployer l'application convergence (cf sources du [web service](https://github.com/abes-esr/sudoc-api)) en local sur le poste d'un développeur, ou bien sur les serveurs de dev, test et prod.
 
-## URLs de convergence
+## URLs des Web Services Kbart et Sudoc
 
-Les URLs correspondantes aux déploiements en local, dev, test et prod de item sont les suivantes :
+Les URLs correspondantes aux déploiements en dev, test et prod des webservices Sudoc sont les suivantes :
 
-- local :
-    - http://127.0.0.1:11081/ : URL interne de ...
 - dev :
-    - http://diplotaxis2-dev.v212.abes.fr:15080/ : URL interne des webservices kbart : 
-    - http://diplotaxis2-dev.v212.abes.fr:15081/ : URL interne des webservices sudoc :
+    - http://diplotaxis2-dev.v212.abes.fr:15080/api/v1/ : URL interne des webservices kbart : online_identifer_2_ppn, print_identifier_2_ppn, doi_identifier_2_ppn
+    - http://diplotaxis2-dev.v212.abes.fr:15081/api/v1 : URL interne des webservices sudoc : dat2ppn
 - test :
-    - http://diplotaxis2-test.v202.abes.fr:15080/ : URL interne des webservices kbart :
-    - http://diplotaxis2-test.v202.abes.fr:15081/ : URL interne des webservices sudoc :
+    - http://diplotaxis2-test.v202.abes.fr:15080/api/v1 : URL interne des webservices kbart : online_identifer_2_ppn, print_identifier_2_ppn, doi_identifier_2_ppn
+    - http://diplotaxis2-test.v202.abes.fr:15081/api/v1 : URL interne des webservices sudoc : dat2ppn
 - prod
-    - http://diplotaxis2-prod.v102.abes.fr:15080/ : URL interne des webservices kbart :
-    - http://diplotaxis2-prod.v102.abes.fr:15081/ : URL interne des webservices sudoc :
+    - http://diplotaxis2-prod.v102.abes.fr:15080/api/v1 : URL interne des webservices kbart : online_identifer_2_ppn, print_identifier_2_ppn, doi_identifier_2_ppn
+    - http://diplotaxis2-prod.v102.abes.fr:15081/api/v1 : URL interne des webservices sudoc : dat2ppn
+
+## URLs Swagger
+
+Les URLs d'accès à la documentation Swagger des différents Web Services sur les environnements sont les suivantes : 
+
+- dev : 
+    - http://diplotaxis2-dev.v212.abes.fr:15080/swagger-ui/index.html : doc Swagger pour Web Services Kbart
+    - http://diplotaxis2-dev.v212.abes.fr:15081/swagger-ui/index.html : doc Swagger pour Web Service Sudoc
+- test : 
+    - http://diplotaxis2-test.v202.abes.fr:15080/swagger-ui/index.html : doc Swagger pour Web Services Kbart
+    - http://diplotaxis2-test.v202.abes.fr:15081/swagger-ui/index.html : doc Swagger pour Web Service Sudoc
+- prod : 
+    - http://diplotaxis2-prod.v102.abes.fr:15080/swagger-ui/index.html : doc Swagger pour Web Services Kbart
+    - http://diplotaxis2-prod.v102.abes.fr:15081/swagger-ui/index.html : doc Swagger pour Web Service Sudoc
+    
 ## Prérequis
 Disposer de :
 - ``docker``
