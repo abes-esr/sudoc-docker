@@ -1,9 +1,9 @@
 #
 # Ci-dessous la config qui permet de lancer convergence-docker
 #
-# Remarque: avant de lancer docker-compose up, il faut régler le fichier .env
+# Remarque: avant de lancer docker-compose up, il faut rÃ©gler le fichier .env
 # en partant du fichier .env-dist qui donne les variables d'environnements
-# à personnaliser et des exemples de valeurs.
+# Ã  personnaliser et des exemples de valeurs.
 #
 
 version: "3.5"
@@ -11,71 +11,47 @@ version: "3.5"
 services:
 
   ############################
-  # convergence-api
-  # API de convergence
-  # (écrite en java spring boot)
-  kbart-api:
-    image: abesesr/convergence:${CONVERGENCE_KBART_API_VERSION}
-    container_name: kbart-api
-    restart: unless-stopped
-    mem_limit: ${MEM_LIMIT}
-    environment:
-      # Pour basculer sur bon application-xxx.properties préalablement embarqué
-      # dans le code ici:
-      # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
-      SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
-      # Pour surcharger les paramètres spring du application-xxx.properties
-      # ci-dessous via le système de .env de docker
-      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
-      # pour la liste de tous les champs qu'on peut surcharger,
-      # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_BASEXML_JDBCURL: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_JDBCURL}
-      SPRING_DATASOURCE_BASEXML_USERNAME: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_USERNAME}
-      SPRING_DATASOURCE_BASEXML_PASSWORD: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
-    ports:
-      - ${CONVERGENCE_KBART_API_HTTP_PORT}:8082
-    labels:
-      # pour envoyer les logs dans le puits de log de l'abes
-      - "co.elastic.logs/enabled=true"
-      - "co.elastic.logs/processors.add_fields.target="
-      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
-      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
-
-  ############################
-  # convergence-api
-  # API de convergence
-  # (écrite en java spring boot)
+  # sudoc-api
+  # API de sudoc
+  # (Ã©crite en java spring boot)
   sudoc-api:
     image: abesesr/convergence:${CONVERGENCE_SUDOC_API_VERSION}
     container_name: sudoc-api
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     environment:
-      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # Pour basculer sur bon application-xxx.properties prÃ©alablement embarquÃ©
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
       SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
+      # Pour surcharger les paramÃ¨tres spring du application-xxx.properties
+      # ci-dessous via le systÃ¨me de .env de docker
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # pour la liste de tous les champs qu'on peut surcharger,
+      # voir le contenu des application-xxx.properties embarquÃ©s dans le code sources
+    SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
       SUDOC_SERVEUR: ${CONVERGENCE_API_SUDOC_SERVEUR}
       SUDOC_LOGIN: ${CONVERGENCE_API_SUDOC_LOGIN}
       SUDOC_PASSWD: ${CONVERGENCE_API_SUDOC_PASS}
       SUDOC_PORT: 1050
-    ports:
-      - ${CONVERGENCE_SUDOC_API_HTTP_PORT}:8082
-    labels:
-      # pour envoyer les logs dans le puits de log de l'abes
-      - "co.elastic.logs/enabled=true"
-      - "co.elastic.logs/processors.add_fields.target="
-      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
-      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
+      SPRING_DATASOURCE_BASEXML_JDBCURL: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_JDBCURL}
+      SPRING_DATASOURCE_BASEXML_USERNAME: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_USERNAME}
+      SPRING_DATASOURCE_BASEXML_PASSWORD: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
+      ports:
+        - ${CONVERGENCE_SUDOC_API_HTTP_PORT}:8082
+      labels:
+        # pour envoyer les logs dans le puits de log de l'abes
+        - "co.elastic.logs/enabled=true"
+        - "co.elastic.logs/processors.add_fields.target="
+        - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
+        - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+        # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
+        - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
 
   #######################################
   # convergence-watchtower
-  # Conteneur chargé de mettre à jour automatiquement toutes les N secondes
-  # les images docker des conteneurs surveillés (via le système de label/scope de watchtower)
+  # Conteneur chargÃ© de mettre Ã  jour automatiquement toutes les N secondes
+  # les images docker des conteneurs surveillÃ©s (via le systÃ¨me de label/scope de watchtower)
   # plus d'info : https://containrrr.dev/watchtower
   # cf README.md pour explications : https://github.com/abes-esr/convergence-docker#d%C3%A9ploiement-continu
   convergence-watchtower:
@@ -99,6 +75,4 @@ services:
       WATCHTOWER_SCOPE: "convergence-watchtower-scope"
     labels:
       - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
-
-
 
