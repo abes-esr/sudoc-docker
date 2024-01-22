@@ -15,7 +15,7 @@ services:
   # API de sudoc
   # (Ã©crite en java spring boot)
   sudoc-api:
-    image: abesesr/convergence:${CONVERGENCE_SUDOC_API_VERSION}
+    image: abesesr/sudoc:${CONVERGENCE_SUDOC_API_VERSION}
     container_name: sudoc-api
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
@@ -29,7 +29,6 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarquÃ©s dans le code sources
-    SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
       SUDOC_SERVEUR: ${CONVERGENCE_API_SUDOC_SERVEUR}
       SUDOC_LOGIN: ${CONVERGENCE_API_SUDOC_LOGIN}
       SUDOC_PASSWD: ${CONVERGENCE_API_SUDOC_PASS}
@@ -37,16 +36,16 @@ services:
       SPRING_DATASOURCE_BASEXML_JDBCURL: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_JDBCURL}
       SPRING_DATASOURCE_BASEXML_USERNAME: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_USERNAME}
       SPRING_DATASOURCE_BASEXML_PASSWORD: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
-      ports:
-        - ${CONVERGENCE_SUDOC_API_HTTP_PORT}:8082
-      labels:
-        # pour envoyer les logs dans le puits de log de l'abes
-        - "co.elastic.logs/enabled=true"
-        - "co.elastic.logs/processors.add_fields.target="
-        - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
-        - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-        # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
-        - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
+    ports:
+      - ${CONVERGENCE_SUDOC_API_HTTP_PORT}:8082
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
+      - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
 
   #######################################
   # convergence-watchtower
