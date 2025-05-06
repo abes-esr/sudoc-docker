@@ -46,7 +46,7 @@ services:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
       - "co.elastic.logs/processors.add_fields.target="
-      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence"
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence-sudoc-api"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
       - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
