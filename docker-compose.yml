@@ -15,7 +15,7 @@ services:
   # API de sudoc
   # (Ã©crite en java spring boot)
   sudoc-api:
-    image: abesesr/sudoc:${CONVERGENCE_SUDOC_API_VERSION}
+    image: abesesr/sudoc:${SUDOC_API_VERSION}
     container_name: sudoc-api
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
@@ -23,30 +23,76 @@ services:
       # Pour basculer sur bon application-xxx.properties prÃ©alablement embarquÃ©
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
-      SPRING_PROFILES_ACTIVE: ${CONVERGENCE_API_SPRING_PROFILES_ACTIVE}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       # Pour surcharger les paramÃ¨tres spring du application-xxx.properties
       # ci-dessous via le systÃ¨me de .env de docker
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarquÃ©s dans le code sources
-      SUDOC_SERVEUR: ${CONVERGENCE_API_SUDOC_SERVEUR}
-      SUDOC_LOGIN: ${CONVERGENCE_API_SUDOC_LOGIN}
-      SUDOC_PASSWD: ${CONVERGENCE_API_SUDOC_PASS}
-      SUDOC_PORT: 1075
-      SPRING_DATASOURCE_URL: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_JDBCURL}
-      SPRING_DATASOURCE_USERNAME: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${CONVERGENCE_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
-      SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: ${CONVERGENCE_API_SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_BASEXML_JDBCURL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_BASEXML_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_BASEXML_PASSWORD}
+      SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: ${API_SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE}
       LOGGING_LEVEL_FR_ABES_SUDOC: ${CONVERGENCE_API_LOGGING_LEVEL}
-      HOSTNAME: ${HOSTNAME}
+      JAVA_OPTIONS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.host=0.0.0.0"
     ports:
-      - ${CONVERGENCE_SUDOC_API_HTTP_PORT}:8082
+      - ${SUDOC_API_HTTP_PORT}:8082
       - 15088:9090
+      - 1099:1099
+
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence-sudoc-api"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
+      - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
+
+  #########################################
+  # best-ppn-api
+  # API en spring
+  best-ppn-api:
+    image: abesesr/convergence:${BESTPPNAPI_VERSION}
+    container_name: best-ppn-api
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    volumes:
+      - ${LOGSKBART_API_PATH_TSVFILE}:/app/tempLog/
+    ports:
+      - ${BESTPPNAPI_PORT}:8083
+    environment:
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # dans le code ici:
+      # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      # Pour surcharger les paramètres spring du application-xxx.properties
+      # ci-dessous via le système de .env de docker
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # pour la liste de tous les champs qu'on peut surcharger,
+      # voir le contenu des application-xxx.properties embarqués dans le code sources
+      ABES_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      ABES_KAFKA_REGISTRY_URL: ${KAFKA_REGISTRY_URL}
+      ABES_KAFKA_CONCURRENCY_NBTHREAD: ${KAFKA_CONCURRENCY_NBTHREAD}
+      SPRING_DATASOURCE_BASEXML_JDBCURL: ${SPRING_DATASOURCE_BASEXML_JDBCURL}
+      SPRING_DATASOURCE_BASEXML_USERNAME: ${SPRING_DATASOURCE_BASEXML_USERNAME}
+      SPRING_DATASOURCE_BASEXML_PASSWORD: ${SPRING_DATASOURCE_BASEXML_PASSWORD}
+      SPRING_DATASOURCE_BACON_JDBCURL: ${BACON_JDBCURL}
+      SPRING_DATASOURCE_BACON_USERNAME: ${BACON_USERNAME}
+      SPRING_DATASOURCE_BACON_PASSWORD: ${BACON_PASSWORD}
+      URL_ONLINEID2PPN: http://sudoc-api:8082/api/v1/online_identifier_2_ppn
+      URL_PRINTID2PPN: http://sudoc-api:8082/api/v1/print_identifier_2_ppn
+      URL_DAT2PPN: http://sudoc-api:8082/api/v1/dat2ppn
+      URL_DOI2PPN: http://sudoc-api:8082/api/v1/doi_identifier_2_ppn
+      MAIL_WS_URL: ${MAIL_WS_URL}
+      MAIL_WS_RECIPIENT: ${MAIL_WS_RECIPIENT_KBART_2_BACON}
+      SERVEUR_URL: ${SERVEUR_URL}
+      SPRING_JPA_BACON_SHOW-SQL: false
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence-best-ppn-api"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
       - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
