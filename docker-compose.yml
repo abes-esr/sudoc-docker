@@ -1,9 +1,9 @@
 #
 # Ci-dessous la config qui permet de lancer convergence-docker
 #
-# Remarque: avant de lancer docker-compose up, il faut rÃ©gler le fichier .env
+# Remarque: avant de lancer docker-compose up, il faut régler le fichier .env
 # en partant du fichier .env-dist qui donne les variables d'environnements
-# Ã  personnaliser et des exemples de valeurs.
+# à personnaliser et des exemples de valeurs.
 #
 
 version: "3.5"
@@ -13,22 +13,22 @@ services:
   ############################
   # sudoc-api
   # API de sudoc
-  # (Ã©crite en java spring boot)
+  # (écrite en java spring boot)
   sudoc-api:
     image: abesesr/sudoc:${SUDOC_API_VERSION}
     container_name: sudoc-api
     restart: no
     mem_limit: ${MEM_LIMIT}
     environment:
-      # Pour basculer sur bon application-xxx.properties prÃ©alablement embarquÃ©
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
-      # Pour surcharger les paramÃ¨tres spring du application-xxx.properties
-      # ci-dessous via le systÃ¨me de .env de docker
+      # Pour surcharger les paramètres spring du application-xxx.properties
+      # ci-dessous via le système de .env de docker
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
-      # voir le contenu des application-xxx.properties embarquÃ©s dans le code sources
+      # voir le contenu des application-xxx.properties embarqués dans le code sources
       SPRING_DATASOURCE_URL: ${SUDOC_API_SPRING_DATASOURCE_BASEXML_JDBCURL}
       SPRING_DATASOURCE_USERNAME: ${SUDOC_API_SPRING_DATASOURCE_BASEXML_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SUDOC_API_SPRING_DATASOURCE_BASEXML_PASSWORD}
@@ -45,7 +45,7 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence-sudoc-api"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
 
   #########################################
@@ -59,7 +59,7 @@ services:
     volumes:
       - ${LOGSKBART_API_PATH_TSVFILE}:/app/tempLog/
     ports:
-      - ${BESTPPNAPI_PORT}:8083
+      - ${BEST_PPN_API_HTTP_PORT}:8083
     environment:
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
@@ -93,13 +93,13 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=convergence-best-ppn-api"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises Ã  jour de cette image soient auto-dÃ©ployÃ©es par watchtower
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=convergence-watchtower-scope"
 
   #######################################
   # convergence-watchtower
-  # Conteneur chargÃ© de mettre Ã  jour automatiquement toutes les N secondes
-  # les images docker des conteneurs surveillÃ©s (via le systÃ¨me de label/scope de watchtower)
+  # Conteneur chargé de mettre à jour automatiquement toutes les N secondes
+  # les images docker des conteneurs surveillés (via le système de label/scope de watchtower)
   # plus d'info : https://containrrr.dev/watchtower
   # cf README.md pour explications : https://github.com/abes-esr/convergence-docker#d%C3%A9ploiement-continu
   convergence-watchtower:
