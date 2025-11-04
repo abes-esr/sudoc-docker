@@ -61,6 +61,7 @@ services:
       - ${LOGSKBART_API_PATH_TSVFILE}:/app/tempLog/
     ports:
       - ${BEST_PPN_API_HTTP_PORT}:8083
+      - "15091:8084"
     environment:
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
